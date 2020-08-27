@@ -10,5 +10,15 @@
 </head>
 <body>
 <h1>Hello, {{ user.username }}!</h1>
+{% for customer in customers %}
+<div>
+    <h2>{{ customer.company }}</h2>
+    <address>
+        {{ customer.address }}<br>
+        {{ customer.zip }} {{ customer.city }}
+    </address>
+    <small>Created by: {{ customer.creator.username }}</small>
+</div>
+{% endfor %}
 </body>
 </html>

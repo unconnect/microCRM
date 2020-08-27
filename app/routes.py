@@ -7,4 +7,22 @@ from app import crm
 def index():
     # Dummy User with dictionary
     user = {'username': 'Nikolas'}
-    return render_template('index.html', user=user)
+    customers = [
+        {
+            'company':  'Musterfirma 1 GmbH',
+            'address':  'Musterstraße 1',
+            'zipcode':  '12345',
+            'city':     'Speckystädtchen',
+            'creator': {'username': 'John'}
+        },
+        {
+         'company': 'Musterfirma 2 GmbH',
+            'address': 'Musterstraße 112',
+            'zipcode': '54321',
+            'city': 'Großstädtchen',
+            'creator': {'username': 'Nikolas'}
+        }
+    ]
+
+    return render_template('index.html', title="Homepage", user=user,
+                           customers=customers)
