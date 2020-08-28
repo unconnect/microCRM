@@ -1,5 +1,6 @@
 from flask import render_template
 from app import crm
+from datetime import date
 
 
 @crm.route('/')
@@ -7,6 +8,7 @@ from app import crm
 def index():
     # Dummy User with dictionary
     user = {'username': 'Nikolas'}
+    theyear = date.today().year
     customers = [
         {
             'company':  'Musterfirma 1 GmbH',
@@ -16,7 +18,7 @@ def index():
             'creator': {'username': 'John'}
         },
         {
-         'company': 'Musterfirma 2 GmbH',
+         'company': 'Herbert und klein GbR',
             'address': 'Musterstraße 112',
             'zipcode': '54321',
             'city': 'Großstädtchen',
@@ -24,5 +26,8 @@ def index():
         }
     ]
 
-    return render_template('index.html', title="Homepage", user=user,
+    return render_template('index.html',
+                           title="Homepage",
+                           user=user,
+                           theyear=theyear,
                            customers=customers)

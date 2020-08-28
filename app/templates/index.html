@@ -1,24 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    {% if title %}
-        <title>{{ title }} - microCRM</title>
-    {% else %}
-        <title>Welcome to the microCRM</title>
-    {% endif %}
-</head>
-<body>
-<h1>Hello, {{ user.username }}!</h1>
-{% for customer in customers %}
-<div>
-    <h2>{{ customer.company }}</h2>
-    <address>
-        {{ customer.address }}<br>
-        {{ customer.zip }} {{ customer.city }}
-    </address>
-    <small>Created by: {{ customer.creator.username }}</small>
-</div>
-{% endfor %}
-</body>
-</html>
+{% extends "layout.html" %}
+
+{% block content %}
+    {% for customer in customers %}
+    <div class="">
+        <h2>{{ customer.company }}</h2>
+        <address>
+            {{ customer.address }}<br>
+            {{ customer.zip }} {{ customer.city }}
+        </address>
+        <small>Created by: {{ customer.creator.username }}</small>
+    </div>
+    {% endfor %}
+{% endblock %}
