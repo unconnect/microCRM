@@ -1,11 +1,13 @@
 from flask import Flask
 from config import Config
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
 
 crm = Flask(__name__)
 crm.config.from_object(Config)
+crm.template_folder = crm.config['TEMPLATE_DIR']
+db = SQLAlchemy(crm)
+migrate = Migrate(crm, db)
 
-template_dir = crm.config['TEMPLATE_DIR']
-crm.template_folder = template_dir
-
-from app import routes
+from app import routes, models
