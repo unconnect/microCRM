@@ -1,24 +1,45 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
     {% if title %}
         <title>{{ title }} - microCRM</title>
     {% else %}
         <title>Welcome to the microCRM</title>
     {% endif %}
+
 </head>
 <body>
 
 <header>
+    {% if user %}
     <span>Hello {{ user.username }}, you are logged in!</span>
+    {% endif %}
     <nav id="mainnavigation">
         <ul>
             <li>
                 <a href="/">Dashboard</a>
             </li>
+            <li>
+                <a href="/login">Login</a>
+            </li>
         </ul>
     </nav>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul>
+        {% for message in messages %}
+        <li>
+            {{ message }}
+        </li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
     <hr>
 </header>
 
@@ -28,7 +49,7 @@
 
 <footer id="pagefooter">
     <hr>
-    &copy; {{ theyear }} <small>micro</small><strong>CRM</strong> by Alexander
+    &copy; {{ the_year }} <small>micro</small><strong>CRM</strong> by Alexander
     Nikolas TEST
     Reuber
 </footer>

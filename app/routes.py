@@ -1,20 +1,21 @@
-from flask import render_template
+from flask import render_template, flash, redirect
 from app import crm
 from datetime import date
+from app.forms import LoginForm
 
+the_year = date.today().year
 
 @crm.route('/')
 @crm.route('/index')
 def index():
     # Dummy User with dictionary
     user = {'username': 'Nikolas'}
-    theyear = date.today().year
     customers = [
         {
-            'company':  'Musterfirma 1 GmbH',
-            'address':  'Musterstraße 1',
-            'zipcode':  '12345',
-            'city':     'Speckystädtchen',
+            'company': 'Musterfirma 1 GmbH',
+            'address': 'Musterstraße 1',
+            'zipcode': '12345',
+            'city': 'Speckystädtchen',
             'creator': {'username': 'John'}
         },
         {
@@ -29,5 +30,19 @@ def index():
     return render_template('index.html',
                            title="Homepage",
                            user=user,
-                           theyear=theyear,
+                           the_year=the_year,
                            customers=customers)
+
+@crm.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+
+    # When User is valid show flash message and redirect to /index
+    if form.validate_on_submit():
+        flash(f'Login requested for user {form.username.data},'
+              f'remember_me={form.remember_me.data}')
+        return redirect('/index')
+    return render_template('login.html',
+                           title='Sign In',
+                           the_year=the_year,
+                           form=form)
