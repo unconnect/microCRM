@@ -8,6 +8,10 @@ the_year = date.today().year
 @crm.route('/')
 @crm.route('/index')
 def index():
+    """
+    Index View
+    :return:
+    """
     # Dummy User with dictionary
     user = {'username': 'Nikolas'}
     customers = [
@@ -35,6 +39,10 @@ def index():
 
 @crm.route('/login', methods=['GET', 'POST'])
 def login():
+    """
+    Login View
+    :return:
+    """
     form = LoginForm()
 
     # When User is valid show flash message and redirect to /index
