@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for, request
-from app import crm
+from app import crm, db
 from datetime import date
-from app.forms import LoginForm
+from app.forms import LoginForm, RegistrationForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User
 from werkzeug.urls import url_parse
@@ -14,8 +14,10 @@ the_year = date.today().year
 @login_required
 def index():
     """
-    Index View
-    :return:
+    Index View:
+    Shows the apps dashboard for logged in users.
+
+    :return: render_template
     """
     # Dummy User with dictionary
     user = {'username': 'Nikolas'}
@@ -45,7 +47,7 @@ def index():
 @crm.route('/login', methods=['GET', 'POST'])
 def login():
     """
-    Login View
+    Login View:
     Renders login form and verifies user credentials. Redirects to index after
     user successfully logged in and flashes a message. Otherwise renders the
     form again.
@@ -76,3 +78,19 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('index'))
+
+@crm.route('/register', methods=['GET', 'POST'])
+def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('indec'))
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        user = User(username=form.username.data, email=form.email.data,
+                    first_name=form.first_name.data,
+                    last_name=form.last_name.data)
+        user.set_password(form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        flash('You have successfully registered!')
+        return redirect(url_for('login'))
+    return render_template('register.html', title='Register', form=form)

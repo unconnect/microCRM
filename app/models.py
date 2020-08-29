@@ -9,10 +9,13 @@ from flask_login import UserMixin
 def load_user(id):
     return User.query.get(int(id))
 
+
 class User(UserMixin, db.Model):
     # __tablename__ = 'custom_table_name'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
+    first_name = db.Column(db.String(64))
+    last_name = db.Column(db.String(64))
     email = db.Column(db.String(255), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     customers = db.relationship('Customer', backref='creator', lazy='dynamic')

@@ -16,8 +16,11 @@
 <body>
 
 <header>
-    {% if user %}
-    <span>Hello {{ current_user.username }}, you are logged in!</span>
+    {% if current_user.is_authenticated %}
+    <span>Hello {{ current_user.first_name }} {{ current_user.last_name }}, you
+        are
+        logged
+        in!</span>
     {% endif %}
     <nav id="mainnavigation">
         <ul>
