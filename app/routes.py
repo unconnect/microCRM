@@ -5,6 +5,7 @@ from app.forms import LoginForm
 
 the_year = date.today().year
 
+
 @crm.route('/')
 @crm.route('/index')
 def index():
@@ -36,6 +37,7 @@ def index():
                            user=user,
                            the_year=the_year,
                            customers=customers)
+
 
 @crm.route('/login', methods=['GET', 'POST'])
 def login():

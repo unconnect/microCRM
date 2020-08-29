@@ -6,6 +6,9 @@
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
       <jdbc-url>jdbc:sqlite:C:\Users\alexa\PycharmProjects\microCRM\crm.db</jdbc-url>
+      <driver-properties>
+        <property name="date_precision" value="MILLISECONDS" />
+      </driver-properties>
     </data-source>
   </component>
 </project>
