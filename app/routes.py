@@ -1,13 +1,17 @@
-from flask import render_template, flash, redirect, url_for
+from flask import render_template, flash, redirect, url_for, request
 from app import crm
 from datetime import date
 from app.forms import LoginForm
+from flask_login import current_user, login_user, logout_user, login_required
+from app.models import User
+from werkzeug.urls import url_parse
 
 the_year = date.today().year
 
 
 @crm.route('/')
 @crm.route('/index')
+@login_required
 def index():
     """
     Index View
@@ -34,7 +38,6 @@ def index():
 
     return render_template('index.html',
                            title="Homepage",
-                           user=user,
                            the_year=the_year,
                            customers=customers)
 
@@ -43,16 +46,33 @@ def index():
 def login():
     """
     Login View
-    :return:
-    """
-    form = LoginForm()
+    Renders login form and verifies user credentials. Redirects to index after
+    user successfully logged in and flashes a message. Otherwise renders the
+    form again.
 
+    :return: redirect
+    """
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = LoginForm()
     # When User is valid show flash message and redirect to /index
     if form.validate_on_submit():
-        flash(f'Login requested for user {form.username.data},'
-              f'remember_me={form.remember_me.data}')
-        return redirect(url_for('index'))
+        # Gets User by username and returns the first entry in query. In
+        # this case one or none user.
+        user = User.query.filter_by(username=form.username.data).first()
+        if user is None or not user.check_password(form.password.data):
+            flash('Invalid username or password!')
+            return redirect(url_for('login'))
+        login_user(user, remember=form.remember_me.data)
+        next_page = request.args.get('next')
+        if not next_page or url_parse(next_page).netloc != '':
+            next_page = url_for('index')
+        return redirect(next_page)
     return render_template('login.html',
                            title='Sign In',
                            the_year=the_year,
                            form=form)
+@crm.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('index'))

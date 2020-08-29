@@ -17,23 +17,29 @@
 
 <header>
     {% if user %}
-    <span>Hello {{ user.username }}, you are logged in!</span>
+    <span>Hello {{ current_user.username }}, you are logged in!</span>
     {% endif %}
     <nav id="mainnavigation">
         <ul>
             <li>
                 <a href="{{ url_for('index') }}">Dashboard</a>
             </li>
+            {% if current_user.is_anonymous %}
             <li>
                 <a href="{{ url_for('login') }}">Login</a>
             </li>
+            {% else %}
+            <li>
+                <a href="{{ url_for('logout') }}">Logout</a>
+            </li>
+            {% endif %}
         </ul>
     </nav>
     {% with messages = get_flashed_messages() %}
     {% if messages %}
     <ul>
         {% for message in messages %}
-        <li>
+        <li style="color:red; font-weight:bold;">
             {{ message }}
         </li>
     {% endfor %}
