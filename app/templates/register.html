@@ -19,11 +19,11 @@
             {% endfor %}
         </div>
         <div>
-            {{ form.first_name.label }}<br>
-            {{ form.first_name(size=64) }}<br>
-            {{ form.last_name.label }}<br>
-            {{ form.last_name(size=64) }}<br>
-            {% for error in form.first_name.errors or form.last_name.errors %}
+            {{ form.firstname.label }}<br>
+            {{ form.firstname(size=64) }}<br>
+            {{ form.lastname.label }}<br>
+            {{ form.lastname(size=64) }}<br>
+            {% for error in form.firstname.errors or form.lastname.errors %}
             <span style="color: red;">{{ error }}</span>
             {% endfor %}
         </div>

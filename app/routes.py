@@ -17,10 +17,9 @@ def index():
     Index View:
     Shows the apps dashboard for logged in users.
 
-    :return: render_template
+    :return: render_template()
     """
     # Dummy User with dictionary
-    user = {'username': 'Nikolas'}
     customers = [
         {
             'company': 'Musterfirma 1 GmbH',
@@ -30,7 +29,7 @@ def index():
             'creator': {'username': 'John'}
         },
         {
-         'company': 'Herbert und klein GbR',
+            'company': 'Herbert und klein GbR',
             'address': 'Musterstraße 112',
             'zipcode': '54321',
             'city': 'Großstädtchen',
@@ -52,7 +51,7 @@ def login():
     user successfully logged in and flashes a message. Otherwise renders the
     form again.
 
-    :return: redirect
+    :return: redirect()
     """
     if current_user.is_authenticated:
         return redirect(url_for('index'))
@@ -74,20 +73,28 @@ def login():
                            title='Sign In',
                            the_year=the_year,
                            form=form)
+
+
 @crm.route('/logout')
 def logout():
+    """
+    Logout the logged in user
+    :return: redirect()
+    """
     logout_user()
     return redirect(url_for('index'))
+
 
 @crm.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('indec'))
+        return redirect(url_for('index'))
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(username=form.username.data, email=form.email.data,
-                    first_name=form.first_name.data,
-                    last_name=form.last_name.data)
+        user = User(username=form.username.data,
+                    email=form.email.data,
+                    firstname=form.firstname.data,
+                    lastname=form.lastname.data)
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
