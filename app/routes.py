@@ -3,7 +3,7 @@ from app import crm, db
 from datetime import date
 from app.forms import LoginForm, RegistrationForm
 from flask_login import current_user, login_user, logout_user, login_required
-from app.models import User
+from app.models import User, Customer
 from werkzeug.urls import url_parse
 
 the_year = date.today().year
@@ -14,7 +14,6 @@ the_year = date.today().year
 @login_required
 def index():
     """
-    Index View:
     Shows the apps dashboard for logged in users.
 
     :return: render_template()
@@ -46,7 +45,6 @@ def index():
 @crm.route('/login', methods=['GET', 'POST'])
 def login():
     """
-    Login View:
     Renders login form and verifies user credentials. Redirects to index after
     user successfully logged in and flashes a message. Otherwise renders the
     form again.
@@ -79,6 +77,7 @@ def login():
 def logout():
     """
     Logout the logged in user
+
     :return: redirect()
     """
     logout_user()
@@ -87,6 +86,12 @@ def logout():
 
 @crm.route('/register', methods=['GET', 'POST'])
 def register():
+    """
+    Register a new user.
+
+    :return: if form validates - redirect
+    else render_template
+    """
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     form = RegistrationForm()
@@ -102,3 +107,16 @@ def register():
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form,
                            the_year=the_year)
+
+@crm.route('/user/<username>')
+@login_required
+def user(username):
+    """
+    Renders the users profile page with a list of created customers.
+
+    :param username:
+    :return: render_template
+    """
+    user = User.query.filter_by(username=username).first_or_404()
+    customers = Customer.query.filter_by(creator=user).all()
+    return render_template('user.html', user=user, customers=customers)

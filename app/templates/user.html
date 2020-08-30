@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1>Profil</h1>
+    <img src="{{ user.avatar(128) }}" alt="{{ user.firstname }} {{ user.lastname }}">
+    <h2>{{ user.firstname }} {{ user.lastname }}</h2>
+    <hr>
+    <p><strong>Created Customers:</strong></p>
+    {% if customers %}
+        <ul>
+        {% for customer in customers %}
+            <li>
+                Company: {{ customer.company }}<br>
+                Address: {{ customer.address }}<br>
+                Zipcode: {{ customer.zipcode }}<br>
+                City: {{ customer.city }}
+            </li>
+        </ul>
+        {% endfor %}
+    {% else %}
+        <p>No customers created yet!</p>
+    {% endif %}
+{% endblock %}
