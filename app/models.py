@@ -18,8 +18,13 @@ class User(UserMixin, db.Model):
     firstname = db.Column(db.String(64))
     lastname = db.Column(db.String(64))
     email = db.Column(db.String(255), index=True, unique=True)
+    birthday = db.Column(db.Date)
+    entry_date = db.Column(db.Date)
+    title = db.Column(db.String(64))
+    info = db.Column(db.String(128))
     password_hash = db.Column(db.String(128))
     customers = db.relationship('Customer', backref='creator', lazy='dynamic')
+    last_login = db.Column(db.DateTime, default=datetime.utcnow)
 
     # Constructor
     def __init__(self, username, email, firstname, lastname):

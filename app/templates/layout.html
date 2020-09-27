@@ -23,20 +23,20 @@
         in!</span>
     {% endif %}
     <nav id="mainnavigation">
-        <ul>
-            <li>
+        <ul style="display: flex; list-style: none;">
+            <li style="margin-right: 10px;">
                 <a href="{{ url_for('index') }}">Dashboard</a>
             </li>
             {% if current_user.is_anonymous %}
-            <li>
+            <li style="margin-right: 10px;">
                 <a href="{{ url_for('login') }}">Login</a>
             </li>
             {% else %}
-            <li>
+            <li style="margin-right: 10px;">
                 <a href="{{ url_for('user',
-                                username=current_user.username) }}">Profil</a>
+                                username=current_user.username) }}">Profile</a>
             </li>
-            <li>
+            <li style="margin-right: 10px;">
                 <a href="{{ url_for('logout') }}">Logout</a>
             </li>
             {% endif %}

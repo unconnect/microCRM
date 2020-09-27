@@ -1,21 +1,36 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h1>Profil</h1>
+    <h1>Profile</h1>
     <img src="{{ user.avatar(128) }}" alt="{{ user.firstname }} {{ user.lastname }}">
     <h2>{{ user.firstname }} {{ user.lastname }}</h2>
+    <div>
+        {% if user.last_login %}<small>Last seen {{ user.last_login }}</small>{%
+        endif %}
+        {% if user.title %}<p><strong>Title:</strong> {{ user.title }}</p>{%
+                endif %}
+        {% if user.birthday %}<p><strong>Birthday:</strong> {{ user.birthday }}</p>{% endif %}
+        {% if user.entry_date %}<p><strong>employed since:</strong> {{ user.entry_date }}</p>{%
+            endif %}
+        {% if user.info %}
+            <strong>Information:</strong><br>
+            {{ user.info }}
+        {% endif %}
+    </div>
     <hr>
+    {% if user == current_user %}
+        <a href="{{ url_for('user_edit', username=current_user.username)
+            }}">Edit Profile</a>
+        <hr>
+    {% endif %}
     <p><strong>Created Customers:</strong></p>
     {% if customers %}
         <ul>
-        {% for customer in customers %}
-            <li>
-                Company: {{ customer.company }}<br>
-                Address: {{ customer.address }}<br>
-                Zipcode: {{ customer.zipcode }}<br>
-                City: {{ customer.city }}
-            </li>
+            {% for customer in customers %}
+                <li style="display: flex; flex-direction: row">
+                    {% include "partials/customers.html" %}
+                </li>
+            {% endfor %}
         </ul>
-        {% endfor %}
     {% else %}
         <p>No customers created yet!</p>
     {% endif %}

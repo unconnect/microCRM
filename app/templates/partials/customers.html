@@ -1,0 +1,11 @@
+<div style="margin-right: 10px;">
+    <img src="{{ customer.creator.avatar(64) }}" alt="Created
+    by: {{ customer.creator.username }}">
+</div>
+<div>
+    <strong>{{ customer.company }}</strong><br>
+    <address>
+        {{ customer.address }}<br>
+        {{ customer.zipcode }} {{ customer.city }}
+    </address>
+</div>

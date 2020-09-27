@@ -1,12 +1,19 @@
 from flask import render_template, flash, redirect, url_for, request
 from app import crm, db
-from datetime import date
-from app.forms import LoginForm, RegistrationForm
+from datetime import date, datetime
+from app.forms import LoginForm, RegistrationForm, ProfileEditForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Customer
 from werkzeug.urls import url_parse
 
 the_year = date.today().year
+
+
+@crm.before_request
+def before_request():
+    if current_user.is_authenticated:
+        current_user.last_login = datetime.utcnow()
+        db.session.commit()
 
 
 @crm.route('/')
@@ -18,24 +25,7 @@ def index():
 
     :return: render_template()
     """
-    # Dummy User with dictionary
-    customers = [
-        {
-            'company': 'Musterfirma 1 GmbH',
-            'address': 'Musterstraße 1',
-            'zipcode': '12345',
-            'city': 'Speckystädtchen',
-            'creator': {'username': 'John'}
-        },
-        {
-            'company': 'Herbert und klein GbR',
-            'address': 'Musterstraße 112',
-            'zipcode': '54321',
-            'city': 'Großstädtchen',
-            'creator': {'username': 'Nikolas'}
-        }
-    ]
-
+    customers = Customer.query.all()
     return render_template('index.html',
                            title="Homepage",
                            the_year=the_year,
@@ -105,8 +95,11 @@ def register():
         db.session.commit()
         flash('You have successfully registered!')
         return redirect(url_for('login'))
-    return render_template('register.html', title='Register', form=form,
+    return render_template('register.html',
+                           title='Register',
+                           form=form,
                            the_year=the_year)
+
 
 @crm.route('/user/<username>')
 @login_required
@@ -119,4 +112,33 @@ def user(username):
     """
     user = User.query.filter_by(username=username).first_or_404()
     customers = Customer.query.filter_by(creator=user).all()
-    return render_template('user.html', user=user, customers=customers)
+    return render_template('user.html',
+                           title='Profile',
+                           user=user,
+                           customers=customers)
+
+
+@crm.route('/user/edit/<username>', methods=['GET', 'POST'])
+@login_required
+def user_edit(username):
+    form = ProfileEditForm()
+    if form.validate_on_submit():
+        current_user.username = form.username.data
+        current_user.email = form.email.data
+        current_user.firstname = form.firstname.data
+        current_user.lastname = form.lastname.data
+        current_user.info = form.info.data
+        db.session.commit()
+        flash('Your changes have been saved.')
+        return redirect(url_for('user_edit', username=username))
+    elif request.method == 'POST':
+        flash('Something went wrong!')
+    elif request.method == 'GET':
+        form.username.data = current_user.username
+        form.email.data = current_user.email
+        form.firstname.data = current_user.firstname
+        form.lastname.data = current_user.lastname
+        form.info.data = current_user.info
+    return render_template('user_edit.html',
+                                   title='Profile Edit',
+                                   form=form)

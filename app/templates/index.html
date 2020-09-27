@@ -1,14 +1,16 @@
 {% extends "layout.html" %}
 
 {% block content %}
-    {% for customer in customers %}
-    <div>
-        <h2>{{ customer.company }}</h2>
-        <address>
-            {{ customer.address }}<br>
-            {{ customer.zip }} {{ customer.city }}
-        </address>
-        <small>Created by: {{ customer.creator.username }}</small>
-    </div>
-    {% endfor %}
+    <h2>Customers</h2>
+    {% if customers %}
+        <ul>
+            {% for customer in customers %}
+                <li style="display: flex; flex-direction: row">
+                    {% include "partials/customers.html" %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No customers created yet!</p>
+    {% endif %}
 {% endblock %}
